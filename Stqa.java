@@ -185,7 +185,7 @@ public class Practical8 {
         driver.manage().window().maximize();
         List <WebElement> lists = driver.findElements(By.xpath("//select/option"));
         List <WebElement> lst;
-        lst = driver.findElements(By.xpath("//ul/li"));
+        lst = driver.findElements(By.xpath("//ol/li"));
         System.out.println("Total no.of lists:" + lists.size());
         System.out.println("Total no.of lists:" + lst.size());
          driver.quit();
