@@ -633,3 +633,98 @@ public class Rotator : MonoBehaviour
         transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime);
     }
 }
+
+"""
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package mypack;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.jws.WebService;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+
+/**
+ *
+ * @author SAMSUNG
+ */
+@WebService(serviceName = "BankingSystem")
+public class BankingSystem {
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "withDraw")
+    public String withDraw(@WebParam(name = "BankId") String BankId, @WebParam(name = "Amount") double Amount) {
+        double bal=0.0;
+        String ball=null;
+        try{
+        Class.forName("org.apache.derby.jdbc.ClientDriver"); // driver class
+            Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/Bank", "vinay", "123");
+            PreparedStatement pstmt;
+            pstmt = con.prepareStatement("SELECT * FROM BANKDETAIL WHERE BANKID=?");
+            pstmt.setString(1, BankId);
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            bal= rs.getDouble("BALANCE");
+            if(bal>=Amount)
+            {
+               bal=bal-Amount;
+               ball="The Amount withdrawed successfully "+bal;
+            }
+            else
+            {
+                ball="insufficient balance";
+            }
+            pstmt= con.prepareStatement("UPDATE VINAY.BANKDETAIL SET BALANCE=? WHERE BANKID=?");
+            pstmt.setDouble(1, bal);
+            pstmt.setString(2, BankId);
+            pstmt.executeUpdate();
+            con.close();
+            
+        }
+        catch(Exception e){
+        
+        }
+        return ball;
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "Deposit")
+    public String Deposit(@WebParam(name = "BankId") String BankId, @WebParam(name = "Amount") double Amount) {
+       double bal=0.0;
+        String ball=null;
+        try{
+        Class.forName("org.apache.derby.jdbc.ClientDriver"); // driver class
+            Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/Bank", "vinay", "123");
+            PreparedStatement pstmt;
+            pstmt = con.prepareStatement("SELECT * FROM BANKDETAIL WHERE BANKID=?");
+            pstmt.setString(1, BankId);
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            bal= rs.getDouble("BALANCE");
+            bal=bal+Amount;
+            ball="Deposited Successfully"+Amount;
+            pstmt= con.prepareStatement("UPDATE VINAY.BANKDETAIL SET BALANCE=? WHERE BANKID=?");
+            pstmt.setDouble(1, bal);
+            pstmt.setString(2, BankId);
+            pstmt.executeUpdate();
+            con.close();
+            
+        }
+        catch(Exception e){
+        
+        }
+        return ball;
+    }
+}
+"""
