@@ -1,0 +1,1089 @@
+Practical-1 Aim: Create a Time Server webservice in Java and Consume it in java and 
+other technologies like php and .NET.
+Time Server in Java
+TimeServer.java
+/*
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
+package mypack;
+import java.util.Date;
+import javax.jws.WebService;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+/**
+*
+* @author SAMSUNG
+*/
+@WebService(serviceName = "TimeServer")
+public class TimeServer {
+ /**
+ 
+
+ * Web service operation
+ */
+ @WebMethod(operationName = "GetTimeAsString")
+ public String GetTimeAsString() {
+ //TODO write your implementation code here:
+ return new Date().toString();
+ }
+ /**
+ * Web service operation
+ */
+ @WebMethod(operationName = "getTimeAsElapsed")
+ public long getTimeAsElapsed() {
+ //TODO write your implementation code here:
+ return new Date().getTime();
+ }
+}
+Time Server in Php.
+Tsclient.php
+<?php
+$client=new SoapClient("http://localhost:8080/Practical-1/TimeServer?WSDL");
+$t1=$client->getTimeAsString();
+echo "Time as String: ",$t1->return;
+$t2=$client->getTimeAsElapsed();
+ 
+echo "<br>Time Elapsed: ",$t2->return;
+?>
+Time Server in .NET
+Program.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+namespace ConsoleApp1
+{
+ class Program
+ {
+ static void Main(string[] args)
+ {
+ ServiceReference1.TimeServerClient client = new 
+ServiceReference1.TimeServerClient();
+ Console.WriteLine(".NET Client Interface\n");
+ Console.WriteLine("Time as String " + client.GetTimeAsString());
+ Console.WriteLine("Time Elapsed " + client.getTimeAsElapsed());
+ Console.Read();
+ }
+ }
+ 
+}
+ 
+ 
+Client Side in Java
+Time Server in Php
+ 
+Time Server in .NET
+ 
+Practical-2
+Aim: Create a Java WS for performing basic calculations like addition, 
+subtraction, multiplication and Division and create a java client that 
+consumes the same.
+ 
+Server Side code:
+Calculator.java
+/*
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
+package mypack;
+import javax.jws.WebService;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+/**
+*
+* @author SAMSUNG
+*/
+@WebService(serviceName = "Calculator")
+public class Calculator {
+ /**
+ 
+ * Web service operation
+ */
+ @WebMethod(operationName = "Addition")
+ public double Addition(@WebParam(name = "num1") double num1, @WebParam(name 
+= "num2") double num2) {
+ //TODO write your implementation code here:
+ return (num1+num2);
+ }
+ /**
+ * Web service operation
+ */
+ @WebMethod(operationName = "Subtraction")
+ public double Subtraction(@WebParam(name = "num1") double num1, 
+@WebParam(name = "num2") double num2) {
+ //TODO write your implementation code here:
+ return num1-num2;
+ }
+ /**
+ * Web service operation
+ */
+ @WebMethod(operationName = "Multiplication")
+ public double Multiplication(@WebParam(name = "num1") double num1, 
+@WebParam(name = "num2") double num2) {
+ //TODO write your implementation code here:
+ return num1*num2;
+ 
+ }
+ /**
+ * Web service operation
+ */
+ @WebMethod(operationName = "Division")
+ public double Division(@WebParam(name = "num1") double num1, @WebParam(name = 
+"num2") double num2) {
+ //TODO write your implementation code here: 
+ return num1/num2; 
+ }
+}
+ 
+Practical-3
+Aim: Create a web service that gives – (i) NSE Index, (ii) BSE Index, 
+(iii)Gold Rate. The values are stored in database. Also create a web client 
+for a share trading firm that displays these values on its home page.
+ 
+  
+And Database 
+/*
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
+package mypack;
+import java.sql.Connection;
+import java.sql.DriverManager;
+ 
+
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.jws.WebService;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+/**
+*
+* @author SAMSUNG
+*/
+@WebService(serviceName = "NewWebService")
+public class NewWebService {
+ /**
+ * Web service operation
+ */
+ @WebMethod(operationName = "NSE_Index")
+ public int NSE_Index() {
+ int nse=0;
+ try{
+ Class.forName("org.apache.derby.jdbc.ClientDriver");
+ Connection con 
+=DriverManager.getConnection("jdbc:derby://localhost:1527/Stock","vinay","123");
+ Statement smt=con.createStatement();
+ ResultSet rs=smt.executeQuery("SELECT * FROM STOCKEXCHANGE");
+ rs.next();
+ 
+16 | P a g e
+ nse=rs.getInt("NSE_INDEX");
+ con.close();
+ }
+ catch(Exception e){
+ e.printStackTrace();
+ }
+ //TODO write your implementation code here:
+ return nse;
+ }
+ /**
+ * Web service operation
+ */
+ @WebMethod(operationName = "BSE_index")
+ public int BSE_index() {
+ //TODO write your implementation code here:
+ int bse=0;
+ try{
+ Class.forName("org.apache.derby.jdbc.ClientDriver");
+ Connection con 
+=DriverManager.getConnection("jdbc:derby://localhost:1527/Stock","vinay","123");
+ Statement smt=con.createStatement();
+ ResultSet rs=smt.executeQuery("SELECT * FROM STOCKEXCHANGE");
+ rs.next();
+ bse=rs.getInt("BSE_INDEX");
+ con.close();
+ 
+17 | P a g e
+ }
+ catch(Exception e){
+ e.printStackTrace();
+ }
+ //TODO write your implementation code here:
+ return bse;
+ }
+ /**
+ * Web service operation
+ */
+ @WebMethod(operationName = "Gold_rate")
+ public int Gold_rate() {
+ //TODO write your implementation code here:
+ int gold=0;
+ try{
+ Class.forName("org.apache.derby.jdbc.ClientDriver");
+ Connection con 
+=DriverManager.getConnection("jdbc:derby://localhost:1527/Stock","vinay","123");
+ Statement smt=con.createStatement();
+ ResultSet rs=smt.executeQuery("SELECT * FROM STOCKEXCHANGE");
+ rs.next();
+ gold=rs.getInt("GOLD_RATE");
+ con.close();
+ }
+ catch(Exception e){
+ 
+18 | P a g e
+ e.printStackTrace();
+ }
+ //TODO write your implementation code here:
+ return gold;
+ }
+}
+Client-Side Code:
+Index.html
+Index.jsp
+<%--
+ Document : index
+ Created on : 9 Sep, 2023, 3:23:48 PM
+ Author : SAMSUNG
+--%>
+ 
+19 | P a g e
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>JSP Page</title>
+ </head>
+ <body>
+ <%
+ String choice=request.getParameter("stock");
+ if(choice.equals("BSE")){
+ 
+ try {
+mypack.NewWebService_Service service = new mypack.NewWebService_Service();
+mypack.NewWebService port = service.getNewWebServicePort();
+// TODO process result here
+int result = port.bseIndex();
+out.println("BSE_INDEX = "+result);
+ } catch (Exception ex) {
+// TODO handle custom exceptions here
+ }
+ }
+ else if(choice.equals("NSE")){
+ try {
+ 
+20 | P a g e
+mypack.NewWebService_Service service = new mypack.NewWebService_Service();
+mypack.NewWebService port = service.getNewWebServicePort();
+// TODO process result here
+int result = port.nseIndex();
+out.println("NSE_INDEX = "+result);
+ } catch (Exception ex) {
+// TODO handle custom exceptions here
+ }
+ }
+ else if(choice.equals("GOLD")){
+ try {
+mypack.NewWebService_Service service = new mypack.NewWebService_Service();
+mypack.NewWebService port = service.getNewWebServicePort();
+// TODO process result here
+int result = port.goldRate();
+out.println("GOLD_RATE = "+result);
+ } catch (Exception ex) {
+// TODO handle custom exceptions here
+ }
+ }
+ 
+ %>
+ </body>
+ 
+21 | P a g e
+</html>
+ 
+ 
+ 
+ 
+22 | P a g e
+ 
+23 | P a g e
+Practical-4
+Aim: Create a web service for UGC that contains a method which accepts 
+college name as parameter and returns the NAAC rating. The college 
+names and their ratings are stored in database. Design a web client to test 
+the above web service.
+ 
+  
+And Database 
+Naac.java
+/*
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
+package mypack;
+ 
+24 | P a g e
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.jws.WebService;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+/**
+*
+* @author SAMSUNG
+*/
+@WebService(serviceName = "Naac")
+public class Naac {
+ /**
+ * Web service operation
+ */
+ @WebMethod(operationName = "NaacRating")
+ public String NaacRating(@WebParam(name = "College") String College) {
+ //TODO write your implementation code here:
+ String naac_rating = "-";
+ try {
+ //Driver specification
+ //Driver class 
+ 
+25 | P a g e
+ Class.forName("org.apache.derby.jdbc.ClientDriver"); // driver class
+ Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/UGC", 
+"vinay", "123");
+ Statement stmt = con.createStatement();
+ ResultSet rs = stmt.executeQuery("SELECT * FROM NAAC WHERE 
+COLLEGE_NAME='"+College+"'");
+ rs.next();
+ naac_rating = rs.getString("NAAC_RATING");
+ con.close();
+ }
+ catch(Exception ex) {
+ ex.printStackTrace();
+ }
+ 
+ return naac_rating;
+ }
+}
+Client-Side Code:
+Index.html
+Enter College Name:
+Get_Rating
+ 
+26 | P a g e
+Index.jsp
+<%--
+ Document : index
+ Created on : 9 Sep, 2023, 4:02:15 PM
+ Author : SAMSUNG
+--%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>JSP Page</title>
+ </head>
+ 
+27 | P a g e
+ <body>
+ <%-- start web service invocation --%><hr/>
+ <%
+ try {
+mypack.Naac_Service service = new mypack.Naac_Service();
+mypack.Naac port = service.getNaacPort();
+// TODO initialize WS operation arguments here
+java.lang.String college = request.getParameter("college");
+// TODO process result here
+java.lang.String result = port.naacRating(college);
+out.println("NAAC_RATING = "+result);
+ } catch (Exception ex) {
+// TODO handle custom exceptions here
+ }
+ %>
+ <%-- end web service invocation --%><hr/>
+ 
+ </body>
+</html>
+ 
+  
+ 
+28 | P a g e
+ 
+ 
+29 | P a g e
+ 
+30 | P a g e
+Practical-5
+Aim: Design a web service for a channel containing 2 functions – 1st 
+function called getBreakingNews which accepts date as string parameter 
+and returns special news of that day, 2nd function called getPrediction 
+accepts sunsign name as string parameter and returns predictions as 
+string. Design a client to test the above web service.
+ 
+  
+And Database 
+News Table
+Predication Table
+ 
+31 | P a g e
+Channel.java
+/*
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
+package mypack;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.jws.WebService;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+ 
+32 | P a g e
+/**
+*
+* @author SAMSUNG
+*/
+@WebService(serviceName = "channel")
+public class channel {
+ /**
+ * Web service operation
+ */
+ @WebMethod(operationName = "getNews")
+ public String getNews(@WebParam(name = "Date") String Date) {
+ //TODO write your implementation code here:
+ String getnews = "";
+ try {
+ //Driver specification
+ //Driver class 
+ Class.forName("org.apache.derby.jdbc.ClientDriver"); // driver class
+ Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/UGC", 
+"vinay", "123");
+ Statement stmt = con.createStatement();
+ ResultSet rs = stmt.executeQuery("SELECT * FROM NEWS WHERE 
+DATE='"+Date+"'");
+ rs.next();
+ getnews = rs.getString("GETNEWS");
+ 
+33 | P a g e
+ con.close();
+ }
+ catch(Exception ex) {
+ ex.printStackTrace();
+ }
+ 
+ return getnews;
+ }
+ /**
+ * Web service operation
+ */
+ @WebMethod(operationName = "getPrediction")
+ public String getPrediction(@WebParam(name = "Sunsign") String Sunsign) {
+ //TODO write your implementation code here:
+ String predict = "";
+ try {
+ //Driver specification
+ //Driver class 
+ Class.forName("org.apache.derby.jdbc.ClientDriver"); // driver class
+ Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/UGC", 
+"vinay", "123");
+ Statement stmt = con.createStatement();
+ ResultSet rs = stmt.executeQuery("SELECT * FROM PREDICT WHERE 
+SUNSIGN='"+Sunsign+"'");
+ rs.next();
+ 
+34 | P a g e
+ predict = rs.getString("PREDICTION");
+ con.close();
+ }
+ catch(Exception ex) {
+ ex.printStackTrace();
+ }
+ 
+ return predict;
+ }
+}
+Client-Side Code:
+NEWS
+Enter the Date:
+Get-News
+PREDICATION 
+Enter SunSign:
+Get-Predication
+ 
+Server-Side Output
+ 
+35 | P a g e
+ 
+36 | P a g e
+ 
+ 
+37 | P a g e
+ 
+38 | P a g e
+Practical-6
+Aim: Design a Restful webservice from a database table Employee with 
+columns empid,empname and Designation. Test the webservice for the 
+various http requests.
+ 
+Employee Table as Emp
+ :
+/*
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
+package mypack.service;
+import java.util.List;
+import javax.ejb.Stateless;
+ 
+39 | P a g e
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import mypack.Emp;
+/**
+*
+* @author SAMSUNG
+*/
+@Stateless
+@Path("mypack.emp")
+public class EmpFacadeREST extends AbstractFacade<Emp> {
+ @PersistenceContext(unitName = "Practical-6PU")
+ private EntityManager em;
+ public EmpFacadeREST() {
+ 
+40 | P a g e
+ super(Emp.class);
+ }
+ @POST
+ @Override
+ @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+ public void create(Emp entity) {
+ super.create(entity);
+ }
+ @PUT
+ @Path("{id}")
+ @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+ public void edit(@PathParam("id") Integer id, Emp entity) {
+ super.edit(entity);
+ }
+ @DELETE
+ @Path("{id}")
+ public void remove(@PathParam("id") Integer id) {
+ super.remove(super.find(id));
+ }
+ @GET
+ @Path("{id}")
+ 
+41 | P a g e
+ @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+ public Emp find(@PathParam("id") Integer id) {
+ return super.find(id);
+ }
+ @GET
+ @Override
+ @Produces({ MediaType.APPLICATION_JSON})
+ public List<Emp> findAll() {
+ return super.findAll();
+ }
+ @GET
+ @Path("{from}/{to}")
+ @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+ public List<Emp> findRange(@PathParam("from") Integer from, @PathParam("to") 
+Integer to) {
+ return super.findRange(new int[]{from, to});
+ }
+ @GET
+ @Path("count")
+ @Produces(MediaType.TEXT_PLAIN)
+ public String countREST() {
+ return String.valueOf(super.count());
+ }
+ 
+42 | P a g e
+ @Override
+ protected EntityManager getEntityManager() {
+ return em;
+ }
+ 
+}
+Client-Side Code:
+Index.html
+GET-DATA
+Index.jsp
+<%--
+ Document : index
+ Created on : 10 Sep, 2023, 1:11:16 PM
+ Author : SAMSUNG
+--%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>Employee Page</title>
+ <style> 
+ table {
+ font-family: arial, sans-serif;
+ border-collapse: collapse;
+ }
+ td, th {
+ border: 1px solid #000000; 
+ text-align: center; 
+ padding: 8px;
+ }
+ </style>
+ <script> 
+var request = new XMLHttpRequest();
+request.open('GET','http://localhost:8080/Practical-6/webresources/mypack.emp', true);
+request.onload = function () { 
+ 
+43 | P a g e
+// begin accessing JSON data here 
+var data = JSON.parse(this.response); 
+for (var i = 0; i < data.length; i++) { 
+var table = document.getElementById("myTable"); 
+var row = table.insertRow(); 
+var cell1 = row.insertCell(0);
+var cell2 = row.insertCell(1); 
+var cell3=row.insertCell(2);
+cell1.innerHTML = data[i].empId; 
+cell2.innerHTML = data[i].empName; 
+cell3.innerHTML=data[i].designation;
+} 
+}; 
+request.send(); 
+</script>
+ </head>
+ <body>
+ <table id="myTable">
+ <tr>
+ <th>ID</th>
+ <th>EMPLOYEE NAME</th>
+ <th>DESIGNATION</th>
+ </tr>
+ </table>
+ </body>
+</html>
+ 
+ 
+ 
+44 | P a g e
+ 
+ 
+45 | P a g e
+ 
+46 | P a g e
+Practical-7
+Aim: Design a Restful webservice from a database table Student with 
+columns rollno, name and totalmarks. Create a restful client that displays 
+the data by accessing restful service.
+ 
+Student table
+ :
+Student.java
+/*
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
+package mypack.service;
+import java.util.List;
+ 
+47 | P a g e
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import mypack.Student;
+/**
+*
+* @author SAMSUNG
+*/
+@Stateless
+@Path("mypack.student")
+public class StudentFacadeREST extends AbstractFacade<Student> {
+ @PersistenceContext(unitName = "Practical-7PU")
+ private EntityManager em;
+ 
+48 | P a g e
+ public StudentFacadeREST() {
+ super(Student.class);
+ }
+ @POST
+ @Override
+ @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+ public void create(Student entity) {
+ super.create(entity);
+ }
+ @PUT
+ @Path("{id}")
+ @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+ public void edit(@PathParam("id") Integer id, Student entity) {
+ super.edit(entity);
+ }
+ @DELETE
+ @Path("{id}")
+ public void remove(@PathParam("id") Integer id) {
+ super.remove(super.find(id));
+ }
+ @GET
+ 
+49 | P a g e
+ @Path("{id}")
+ @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+ public Student find(@PathParam("id") Integer id) {
+ return super.find(id);
+ }
+ @GET
+ @Override
+ @Produces({MediaType.APPLICATION_JSON})
+ public List<Student> findAll() {
+ return super.findAll();
+ }
+ @GET
+ @Path("{from}/{to}")
+ @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+ public List<Student> findRange(@PathParam("from") Integer from, @PathParam("to") 
+Integer to) {
+ return super.findRange(new int[]{from, to});
+ }
+ @GET
+ @Path("count")
+ @Produces(MediaType.TEXT_PLAIN)
+ public String countREST() {
+ return String.valueOf(super.count());
+ 
+50 | P a g e
+ }
+ @Override
+ protected EntityManager getEntityManager() {
+ return em;
+ }
+ 
+}
+Client-Side Code:
+Index.html
+GET-DATA
+Index.jsp
+<%--
+ Document : index.jsp
+ Created on : 10 Sep, 2023, 1:32:58 PM
+ Author : SAMSUNG
+--%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>STUDENT Page</title>
+ <style> 
+ 
+51 | P a g e
+ table {
+ font-family: arial, sans-serif;
+ border-collapse: collapse;
+ }
+ td, th {
+ border: 1px solid #000000; 
+ text-align: center; 
+ padding: 8px;
+ }
+ </style>
+ <script> 
+var request = new XMLHttpRequest();
+request.open('GET','http://localhost:8080/Practical-7/webresources/mypack.student', true);
+request.onload = function () { 
+// begin accessing JSON data here 
+var data = JSON.parse(this.response); 
+for (var i = 0; i < data.length; i++) { 
+var table = document.getElementById("myTable"); 
+var row = table.insertRow(); 
+var cell1 = row.insertCell(0);
+var cell2 = row.insertCell(1); 
+ 
+52 | P a g e
+var cell3=row.insertCell(2);
+cell1.innerHTML = data[i].rollNo; 
+cell2.innerHTML = data[i].name; 
+cell3.innerHTML=data[i].totalMarks;
+} 
+}; 
+request.send(); 
+</script>
+ </head>
+ <body>
+ <table id="myTable">
+ <tr>
+ <th>ROLL-NO</th>
+ <th>STUDENT NAME</th>
+ <th>TOTAL-MARKS</th>
+ </tr>
+ </table>
+ </body>
+</html>
+ 
+53 | P a g e
+ 
+ 
+ 
+ 
+54 | P a g e
+ 
+55 | P a g e
+Practical-8
+Aim: Create a WCF service to perform calculations like Addition, 
+Subtraction, Multiplication and Division. Create a client for WCF which 
+invokes the various operations.
+ 
+Iservice.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.Text;
+namespace Practical_8
+{
+ // NOTE: You can use the "Rename" command on the "Refactor" menu to change the 
+interface name "IService1" in both code and config file together.
+ [ServiceContract]
+ public interface IService1
+ {
+ [OperationContract]
+ double Sum(double x, double y);
+ [OperationContract]
+ double Product(double x, double y);
+ }
+}
+ 
+56 | P a g e
+Service1.svc.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.Text;
+namespace Practical_8
+{
+ // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class 
+name "Service1" in code, svc and config file together.
+ // NOTE: In order to launch WCF Test Client for testing this service, please select 
+Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
+ public class Service1 : IService1
+ {
+ public double Product(double x, double y)
+ {
+ return x * y;
+ }
+ public double Sum(double x, double y)
+ {
+ return x + y;
+ }
+ }
+ 
+57 | P a g e
+}
+Default.aspx
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="default.aspx.cs" 
+Inherits="WebApplication1._default" %>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+ <title></title>
+</head>
+<body>
+ <form id="form1" runat="server">
+ <div>
+ <br />
+ <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+ <br />
+ <br />
+ <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox>
+ <br />
+ <br />
+ <asp:TextBox ID="TextBox3" runat="server"></asp:TextBox>
+ <br />
+ <br />
+ <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Sum" />
+ 
+58 | P a g e
+ <asp:Button ID="Button2" runat="server" OnClick="Button2_Click" Text="Product" 
+/>
+ <br />
+ <br />
+ </div>
+ </form>
+</body>
+</html>
+Default.aspx.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+namespace WebApplication1
+{
+ public partial class _default : System.Web.UI.Page
+ {
+ protected void Page_Load(object sender, EventArgs e)
+ {
+ }
+ protected void Button1_Click(object sender, EventArgs e)
+ 
+59 | P a g e
+ {
+ ServiceReference1.Service1Client client = new ServiceReference1.Service1Client();
+ double a = Double.Parse(TextBox1.Text);
+ double b = Double.Parse(TextBox2.Text);
+ TextBox3.Text = Convert.ToString(client.Sum(a, b));
+ }
+ protected void Button2_Click(object sender, EventArgs e)
+ {
+ ServiceReference1.Service1Client client = new ServiceReference1.Service1Client();
+ double a = Double.Parse(TextBox1.Text);
+ double b = Double.Parse(TextBox2.Text);
+ TextBox3.Text = Convert.ToString(client.Product(a, b));
+ }
+ }
+}
+ 
+ 
+60 | P a g e
+ 
+61 | P a g e
+ 
+62 | P a g e
+Practical-9
+Aim: Create a WCF service with different endpoint for Soap based and 
+Rest based implementation.
+ 
+IService.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.Text;
+namespace Practical_9
+{
+ // NOTE: You can use the "Rename" command on the "Refactor" menu to change the 
+interface name "IService1" in both code and config file together.
+ [ServiceContract]
+ public interface IService1
+ {
+ [OperationContract]
+ [System.ServiceModel.Web.WebInvoke(Method = "GET", UriTemplate = 
+"/SayHello/{value}", RequestFormat = 
+System.ServiceModel.Web.WebMessageFormat.Json, ResponseFormat = 
+System.ServiceModel.Web.WebMessageFormat.Json)]
+ string SayHello(string value);
+ }
+}
+ 
+63 | P a g e
+Service1.svc.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.Text;
+namespace Practical_9
+{
+ // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class 
+name "Service1" in code, svc and config file together.
+ // NOTE: In order to launch WCF Test Client for testing this service, please select 
+Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
+ public class Service1 : IService1
+ {
+ public string SayHello(string value)
+ {
+ return string.Format("Hello " + value + " Welcome to WCF Service!!");
+ }
+ }
+}
+Web.config
+<?xml version="1.0"?>
+<configuration>
+ 
+64 | P a g e
+ <appSettings>
+ <add key="aspnet:UseTaskFriendlySynchronizationContext" value="true" />
+ </appSettings>
+ <system.web>
+ <compilation debug="true" targetFramework="4.7.2" />
+ <httpRuntime targetFramework="4.7.2"/>
+ </system.web>
+ <system.serviceModel>
+ <services>
+ <service name="Practical_9.Service1">
+ <endpoint address="jsonservice" binding="webHttpBinding" 
+contract="Practical_9.IService1" behaviorConfiguration="web">
+ </endpoint>
+ <endpoint address="soapservice" binding="basicHttpBinding" 
+contract="Practical_9.IService1">
+ </endpoint>
+ </service>
+ </services>
+ <behaviors>
+ <serviceBehaviors>
+ <behavior>
+ <!-- To avoid disclosing metadata information, set the values below to false before 
+deployment -->
+ <serviceMetadata httpGetEnabled="true" httpsGetEnabled="true"/>
+ <!-- To receive exception details in faults for debugging purposes, set the value below 
+to true. Set to false before deployment to avoid disclosing exception information -->
+ <serviceDebug includeExceptionDetailInFaults="false"/>
+ 
+65 | P a g e
+ </behavior>
+ </serviceBehaviors>
+<endpointBehaviors>
+<behavior name="web">
+<webHttp/>
+</behavior>
+</endpointBehaviors>
+ </behaviors>
+ <protocolMapping>
+ <add binding="basicHttpsBinding" scheme="https" />
+ </protocolMapping> 
+ <serviceHostingEnvironment aspNetCompatibilityEnabled="true" 
+multipleSiteBindingsEnabled="true" />
+ </system.serviceModel>
+ <system.webServer>
+ <modules runAllManagedModulesForAllRequests="true"/>
+ <!--
+ To browse web app root directory during debugging, set the value below to true.
+ Set to false before deployment to avoid disclosing web app folder information.
+ -->
+ <directoryBrowse enabled="true"/>
+ </system.webServer>
+</configuration>
